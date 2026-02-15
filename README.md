@@ -1,5 +1,10 @@
 # gigabyte-ecfan
 
+[![CI](https://github.com/namikofficial/gigabyte-ecfan/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/namikofficial/gigabyte-ecfan/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/namikofficial/gigabyte-ecfan?sort=semver)](https://github.com/namikofficial/gigabyte-ecfan/releases)
+[![License: GPL-2.0-only](https://img.shields.io/badge/license-GPL--2.0--only-blue.svg)](./LICENSE)
+[![Protected Main](https://img.shields.io/badge/main-protected-success)](./docs/BRANCH_PROTECTION.md)
+
 Linux kernel module that exposes Gigabyte Embedded Controller (EC) fan telemetry via `hwmon`.
 This project is intentionally monitoring-only (tach + observed PWM) and does not write fan curves.
 
