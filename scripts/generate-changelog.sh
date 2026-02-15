@@ -57,7 +57,7 @@ while IFS=$'\t' read -r sha subject; do
   esac
 
   printf -- '- %s (%s)\n' "${subject}" "${sha}" >> "${workdir}/${bucket}.txt"
-done < <(git log --no-merges --pretty=format:'%h%x09%s' ${range})
+done < <(git log --no-merges --pretty=format:'%h%x09%s' "${range}")
 
 has_entries=0
 for c in feat fix docs refactor ci chore other; do
@@ -74,7 +74,7 @@ Release date: ${release_date}
 EOF_NOTES
 
 if [ -n "${last_tag}" ]; then
-  printf '\nChanges since `%s`:\n\n' "${last_tag}" >> "${notes_file}"
+  printf "\nChanges since \`%s\`:\n\n" "${last_tag}" >> "${notes_file}"
 else
   printf '\nInitial release notes generated from repository history.\n\n' >> "${notes_file}"
 fi
@@ -83,9 +83,11 @@ append_section() {
   local title="$1"
   local file="$2"
   if [ -s "${file}" ]; then
-    printf '## %s\n\n' "${title}" >> "${notes_file}"
-    cat "${file}" >> "${notes_file}"
-    printf '\n' >> "${notes_file}"
+    {
+      printf '## %s\n\n' "${title}"
+      cat "${file}"
+      printf '\n'
+    } >> "${notes_file}"
   fi
 }
 
