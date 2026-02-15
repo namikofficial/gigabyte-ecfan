@@ -1,6 +1,11 @@
 # Changelog
 
 ## Unreleased
+
+## 1.0.2 - 2026-02-15
+
+- No user-facing changes.
+
 - Generalized docs to remove user/machine-specific values.
 - Added local pre-push protection for `main` (`.githooks/pre-push`).
 - Added branch protection policy documentation (`docs/BRANCH_PROTECTION.md`).

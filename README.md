@@ -34,7 +34,7 @@ This avoids early boot ACPI/EC interactions that can deadlock with GPU init on s
 - `scripts/uninstall.sh`: clean rollback script (root)
 - `scripts/setup-local-guards.sh`: installs local push guard for `main`
 - `scripts/generate-changelog.sh`: generates release notes and changelog section from git history
-- `scripts/create-release.sh`: one-command tag + assets + GitHub release flow
+- `scripts/create-release.sh`: one-command auto-bump + tag + assets + GitHub release flow
 - `systemd/ec-fanmon.service.template`: deferred-load service template
 - `CONTRIBUTING.md`: contribution workflow and standards
 - `SECURITY.md`: vulnerability reporting and support policy

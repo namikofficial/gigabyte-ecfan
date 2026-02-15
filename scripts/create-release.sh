@@ -4,10 +4,11 @@ set -euo pipefail
 usage() {
   cat <<'USAGE'
 Usage:
-  ./scripts/create-release.sh --version <x.y.z> [options]
+  ./scripts/create-release.sh [options]
 
 Options:
-  --version <x.y.z>   Version to release (with or without leading v)
+  --version <x.y.z>   Explicit version (with or without leading v)
+  --bump <kind>       Auto-bump from latest tag: patch (default), minor, major
   --no-sign           Create unsigned annotated tag
   --draft             Create GitHub draft release
   --prerelease        Mark GitHub release as prerelease
@@ -16,12 +17,15 @@ Options:
   --yes               Skip confirmation prompt
 
 Examples:
+  ./scripts/create-release.sh
+  ./scripts/create-release.sh --bump minor
   ./scripts/create-release.sh --version 1.0.1
   ./scripts/create-release.sh --version v1.0.1 --draft
 USAGE
 }
 
 version=""
+bump_kind="patch"
 sign_tag=1
 draft=0
 prerelease=0
@@ -29,10 +33,42 @@ skip_push=0
 skip_gh_release=0
 auto_yes=0
 
+latest_semver_tag() {
+  git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1
+}
+
+compute_next_version() {
+  local last="$1"
+  local bump="$2"
+  local major minor patch
+
+  if [ -z "${last}" ]; then
+    # First release for a new repo.
+    echo "0.1.0"
+    return 0
+  fi
+
+  IFS='.' read -r major minor patch <<<"${last#v}"
+  case "${bump}" in
+    patch) patch=$((patch + 1)) ;;
+    minor) minor=$((minor + 1)); patch=0 ;;
+    major) major=$((major + 1)); minor=0; patch=0 ;;
+    *)
+      echo "Invalid bump kind: ${bump}. Use patch, minor, or major." >&2
+      return 2
+      ;;
+  esac
+  echo "${major}.${minor}.${patch}"
+}
+
 while [ $# -gt 0 ]; do
   case "$1" in
     --version)
       version="${2:-}"
+      shift 2
+      ;;
+    --bump)
+      bump_kind="${2:-}"
       shift 2
       ;;
     --no-sign)
@@ -71,12 +107,21 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-if [ -z "${version}" ]; then
-  usage >&2
+if [ -n "${version}" ] && [ -n "${bump_kind}" ] && [ "${bump_kind}" != "patch" ]; then
+  echo "Use either --version or --bump, not both." >&2
   exit 2
 fi
 
+if [ -z "${version}" ]; then
+  last_tag="$(latest_semver_tag)"
+  version="$(compute_next_version "${last_tag}" "${bump_kind}")"
+fi
+
 version="${version#v}"
+if ! [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Invalid version: ${version}. Expected x.y.z" >&2
+  exit 2
+fi
 tag="v${version}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

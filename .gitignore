@@ -11,3 +11,4 @@ Module.markers
 modules.builtin
 modules.builtin.modinfo
 *.log
+dist

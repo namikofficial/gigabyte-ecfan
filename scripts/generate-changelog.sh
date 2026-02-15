@@ -12,6 +12,11 @@ Examples:
 USAGE
 }
 
+if [ $# -eq 1 ] && { [ "$1" = "-h" ] || [ "$1" = "--help" ]; }; then
+  usage
+  exit 0
+fi
+
 if [ $# -ne 1 ]; then
   usage >&2
   exit 2
@@ -19,6 +24,10 @@ fi
 
 raw_version="$1"
 version="${raw_version#v}"
+if ! [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Invalid version: ${raw_version}. Expected x.y.z or vx.y.z" >&2
+  exit 2
+fi
 tag="v${version}"
 release_date="$(date -u +%Y-%m-%d)"
 
