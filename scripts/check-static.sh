@@ -17,7 +17,7 @@ if ! head -n 1 gigabyte_ec_fan.c | grep -q 'SPDX-License-Identifier'; then
 fi
 
 # 3) Ensure critical docs exist.
-for f in README.md SECURITY.md docs/DEPLOYMENT.md docs/TROUBLESHOOTING.md docs/RELEASE.md; do
+for f in README.md SECURITY.md docs/DEPLOYMENT.md docs/TROUBLESHOOTING.md docs/RELEASE.md docs/BRANCH_PROTECTION.md; do
   [ -f "$f" ] || { echo "missing required doc: $f" >&2; exit 1; }
 done
 

@@ -2,7 +2,7 @@
 
 ## Apply now
 1. `cd ~/kernel-modules/gigabyte_ecfan`
-2. `sudo ./scripts/install.sh --fanmon-bin /home/namik/bin/ec-fanmon`
+2. `sudo ./scripts/install.sh --fanmon-bin /usr/local/bin/ec-fanmon`
 3. `./scripts/verify.sh`
 4. Start when ready: `sudo systemctl enable --now ec-fanmon.service`
 5. Re-verify: `./scripts/verify.sh`

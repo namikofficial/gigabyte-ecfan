@@ -20,12 +20,12 @@
    - `git config user.signingkey <KEY_ID>`
    - `git config tag.gpgSign true`
 2. Create signed annotated tag:
-   - `git tag -s v1.0.0 -m "Release v1.0.0"`
+   - `git tag -s v<version> -m "Release v<version>"`
 3. Verify signature:
-   - `git tag -v v1.0.0`
+   - `git tag -v v<version>`
 4. Push branch and tags:
-   - `git push origin main`
-   - `git push origin v1.0.0`
+   - `git push origin <release-branch>`
+   - `git push origin v<version>`
 
 ## Checksums
 Generate release checksums for source snapshot and key files:
@@ -33,8 +33,10 @@ Generate release checksums for source snapshot and key files:
 ```bash
 mkdir -p dist
 
-git archive --format=tar.gz --prefix=gigabyte-ecfan-v1.0.0/ v1.0.0 > dist/gigabyte-ecfan-v1.0.0.tar.gz
-sha256sum dist/gigabyte-ecfan-v1.0.0.tar.gz scripts/*.sh dkms.conf Makefile gigabyte_ec_fan.c > dist/SHA256SUMS
+VERSION="v<version>"
+
+git archive --format=tar.gz --prefix="gigabyte-ecfan-${VERSION}/" "${VERSION}" > "dist/gigabyte-ecfan-${VERSION}.tar.gz"
+sha256sum "dist/gigabyte-ecfan-${VERSION}.tar.gz" scripts/*.sh dkms.conf Makefile gigabyte_ec_fan.c > dist/SHA256SUMS
 ```
 
 Optional signature for checksums:
@@ -44,7 +46,7 @@ gpg --armor --detach-sign --output dist/SHA256SUMS.asc dist/SHA256SUMS
 ```
 
 ## GitHub release notes
-Create a GitHub release for tag `v1.0.0` and paste contents from `release-notes/v1.0.0.md`.
+Create a GitHub release for tag `v<version>` and paste contents from `release-notes/v<version>.md`.
 Attach:
 - `dist/gigabyte-ecfan-v1.0.0.tar.gz`
 - `dist/SHA256SUMS`

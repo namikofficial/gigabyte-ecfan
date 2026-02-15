@@ -4,25 +4,23 @@
 This repository is configured with:
 - `origin = git@github.com:namikofficial/gigabyte-ecfan.git`
 
-## One-time GitHub repo creation
-Create an empty repository on GitHub with:
-- Owner: `namikofficial`
-- Name: `gigabyte-ecfan`
-- Visibility: your choice (public/private)
-- Do not initialize with README, `.gitignore`, or license
-
 ## Push
-From repository root:
+Push feature/release branches from repository root:
 
 ```bash
-git push -u origin main
+git push -u origin <branch>
 ```
 
 For release tags:
 
 ```bash
-git push origin --tags
+git push origin v<version>
 ```
+
+## Guardrails in place
+- Configured GitHub branch protection for `main` (see `docs/BRANCH_PROTECTION.md`).
+- Use local push guard:
+  - `./scripts/setup-local-guards.sh`
 
 ## Verify
 ```bash

@@ -27,6 +27,7 @@ This avoids early boot ACPI/EC interactions that can deadlock with GPU init on s
 - `dkms.conf`: DKMS package definition
 - `scripts/install.sh`: production install script (root)
 - `scripts/uninstall.sh`: clean rollback script (root)
+- `scripts/setup-local-guards.sh`: installs local push guard for `main`
 - `systemd/ec-fanmon.service.template`: deferred-load service template
 - `CONTRIBUTING.md`: contribution workflow and standards
 - `SECURITY.md`: vulnerability reporting and support policy
@@ -50,7 +51,7 @@ modinfo ./gigabyte_ec_fan.ko | grep vermagic
 Run from this repository root:
 
 ```bash
-sudo ./scripts/install.sh --fanmon-bin /home/namik/bin/ec-fanmon
+sudo ./scripts/install.sh --fanmon-bin /usr/local/bin/ec-fanmon
 ```
 
 Optional flags:
@@ -82,6 +83,15 @@ This removes:
 - DKMS entry (`gigabyte-ec-fan/1.0`)
 - `/usr/src/gigabyte-ec-fan-1.0`
 - softdep and legacy autoload files
+
+## Main Branch Protection (It is already configued on github)
+For a publish-grade workflow, block direct pushes to `main` locally as well:
+
+```bash
+./scripts/setup-local-guards.sh
+```
+
+Already configured server-side protection in GitHub as well.
 
 ## License
 GPL-2.0-only. See `LICENSE`.
