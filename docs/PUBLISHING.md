@@ -18,6 +18,12 @@ From repository root:
 git push -u origin main
 ```
 
+For release tags:
+
+```bash
+git push origin --tags
+```
+
 ## Verify
 ```bash
 git remote -v

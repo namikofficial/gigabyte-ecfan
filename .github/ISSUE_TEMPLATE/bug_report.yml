@@ -1,0 +1,63 @@
+name: Bug report
+description: Report crashes, build failures, or regressions
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill this template completely. For security-sensitive issues, use SECURITY.md report paths.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One-sentence description of the problem
+      placeholder: Module fails to load after kernel update
+    validations:
+      required: true
+  - type: input
+    id: hardware
+    attributes:
+      label: Hardware model
+      placeholder: Gigabyte G5 MF5
+    validations:
+      required: true
+  - type: input
+    id: distro
+    attributes:
+      label: OS / distro
+      placeholder: Pop!_OS 24.04
+    validations:
+      required: true
+  - type: input
+    id: kernel
+    attributes:
+      label: Kernel version
+      placeholder: 6.18.7-76061807-generic
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / diagnostics
+      description: Paste relevant snippets from dmesg, journalctl, dkms status, scripts/verify.sh

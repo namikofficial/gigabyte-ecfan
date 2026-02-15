@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential linux-headers-generic shellcheck
+
+      - name: Shell script syntax
+        run: bash -n scripts/*.sh
+
+      - name: Shell script lint
+        run: shellcheck scripts/*.sh
+
+      - name: Formatting and static checks
+        run: ./scripts/check-static.sh
+
+      - name: Module build check
+        run: |
+          KVER="$(for k in /lib/modules/*; do
+            [ -e "$k/build/Makefile" ] && basename "$k" && break
+          done)"
+          [ -n "${KVER}" ] || { echo "no usable kernel headers found"; exit 1; }
+          make clean
+          make KVER="${KVER}"
+
+      - name: Verify module metadata
+        run: modinfo ./gigabyte_ec_fan.ko | grep -E '^(name|vermagic):'

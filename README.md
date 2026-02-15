@@ -3,11 +3,14 @@
 Linux kernel module that exposes Gigabyte Embedded Controller (EC) fan telemetry via `hwmon`.
 This project is intentionally monitoring-only (tach + observed PWM) and does not write fan curves.
 
-## Compatibility
-- Primary target: Gigabyte G5 MF5
-- OS tested: Pop!_OS 24.04
-- Kernel tested: `6.18.7-76061807-generic`
-- GPU stack context: NVIDIA proprietary driver (deferred module load required)
+## Compatibility Matrix
+| Hardware | OS | Kernel | NVIDIA Driver Stack | Status | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Gigabyte G5 MF5 | Pop!_OS 24.04 | `6.18.7-76061807-generic` | Proprietary driver | Verified | Post-boot module load required |
+
+Policy:
+- Do not assume compatibility on unlisted hardware/kernels.
+- Treat unlisted environments as experimental until validated.
 
 ## Safety model
 - No module autoload at boot.
@@ -26,8 +29,12 @@ This avoids early boot ACPI/EC interactions that can deadlock with GPU init on s
 - `scripts/uninstall.sh`: clean rollback script (root)
 - `systemd/ec-fanmon.service.template`: deferred-load service template
 - `CONTRIBUTING.md`: contribution workflow and standards
+- `SECURITY.md`: vulnerability reporting and support policy
 - `docs/DEPLOYMENT.md`: deployment and kernel-update runbook
+- `docs/TROUBLESHOOTING.md`: failure signatures and rollback steps
 - `docs/PUBLISHING.md`: GitHub publication steps
+- `docs/RELEASE.md`: semantic release/tag/checksum process
+- `release-notes/`: versioned release notes for GitHub releases
 
 ## Local build (non-DKMS)
 Requirements:
