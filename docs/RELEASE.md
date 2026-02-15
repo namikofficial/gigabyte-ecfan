@@ -4,50 +4,38 @@
 - Use semantic version tags: `vMAJOR.MINOR.PATCH`.
 - Example: `v1.0.0`.
 
-## Pre-release checklist
-1. Ensure CI is green on `main`.
-2. Run local validation:
-   - `make`
-   - `bash -n scripts/*.sh`
-   - `./scripts/check-static.sh`
-3. Update:
-   - `CHANGELOG.md`
-   - `release-notes/<version>.md`
-4. Confirm docs reflect current behavior.
-
-## Signed tag workflow
-1. Ensure your GPG key is configured:
-   - `git config user.signingkey <KEY_ID>`
-   - `git config tag.gpgSign true`
-2. Create signed annotated tag:
-   - `git tag -s v<version> -m "Release v<version>"`
-3. Verify signature:
-   - `git tag -v v<version>`
-4. Push branch and tags:
-   - `git push origin <release-branch>`
-   - `git push origin v<version>`
-
-## Checksums
-Generate release checksums for source snapshot and key files:
+## Automated flow (recommended)
+Run from repository root:
 
 ```bash
-mkdir -p dist
-
-VERSION="v<version>"
-
-git archive --format=tar.gz --prefix="gigabyte-ecfan-${VERSION}/" "${VERSION}" > "dist/gigabyte-ecfan-${VERSION}.tar.gz"
-sha256sum "dist/gigabyte-ecfan-${VERSION}.tar.gz" scripts/*.sh dkms.conf Makefile gigabyte_ec_fan.c > dist/SHA256SUMS
+./scripts/create-release.sh --version <x.y.z>
 ```
 
-Optional signature for checksums:
+This command:
+1. Runs static/shell checks.
+2. Generates:
+   - `release-notes/v<x.y.z>.md`
+   - version section in `CHANGELOG.md`
+3. Commits generated changelog files if needed.
+4. Creates an annotated tag (`-s` signed by default).
+5. Builds release artifacts in `dist/`:
+   - `gigabyte-ecfan-v<x.y.z>.tar.gz`
+   - `SHA256SUMS-v<x.y.z>`
+   - `SHA256SUMS-v<x.y.z>.asc` (when GPG signing available)
+6. Pushes the tag.
+7. Creates the GitHub release and uploads assets.
+
+## Useful options
+- Unsigned tag:
+  - `./scripts/create-release.sh --version <x.y.z> --no-sign`
+- Draft release:
+  - `./scripts/create-release.sh --version <x.y.z> --draft`
+- Skip publishing (prepare locally only):
+  - `./scripts/create-release.sh --version <x.y.z> --skip-push --skip-gh-release`
+
+## Changelog generation only
+If you only want notes/changelog updates:
 
 ```bash
-gpg --armor --detach-sign --output dist/SHA256SUMS.asc dist/SHA256SUMS
+./scripts/generate-changelog.sh <x.y.z>
 ```
-
-## GitHub release notes
-Create a GitHub release for tag `v<version>` and paste contents from `release-notes/v<version>.md`.
-Attach:
-- `dist/gigabyte-ecfan-v1.0.0.tar.gz`
-- `dist/SHA256SUMS`
-- `dist/SHA256SUMS.asc` (if signed)
