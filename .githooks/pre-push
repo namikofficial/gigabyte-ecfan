@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Blocks direct pushes to main by default.
+# Override intentionally with: ALLOW_MAIN_PUSH=1 git push ...
+if [ "${ALLOW_MAIN_PUSH:-0}" = "1" ]; then
+  exit 0
+fi
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [ "${remote_ref}" = "refs/heads/main" ]; then
+    echo "ERROR: direct pushes to main are blocked by local policy." >&2
+    echo "Use a feature branch + PR, or override intentionally:" >&2
+    echo "  ALLOW_MAIN_PUSH=1 git push origin <source>:main" >&2
+    exit 1
+  fi
+done
+
+exit 0
