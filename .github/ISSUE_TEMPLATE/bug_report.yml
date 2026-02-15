@@ -20,14 +20,14 @@ body:
     id: hardware
     attributes:
       label: Hardware model
-      placeholder: Gigabyte G5 MF5
+      placeholder: Vendor + model
     validations:
       required: true
   - type: input
     id: distro
     attributes:
       label: OS / distro
-      placeholder: Pop!_OS 24.04
+      placeholder: Distribution and version
     validations:
       required: true
   - type: input
