@@ -33,6 +33,8 @@ This avoids early boot ACPI/EC interactions that can deadlock with GPU init on s
 - `scripts/install.sh`: production install script (root)
 - `scripts/uninstall.sh`: clean rollback script (root)
 - `scripts/setup-local-guards.sh`: installs local push guard for `main`
+- `scripts/generate-changelog.sh`: generates release notes and changelog section from git history
+- `scripts/create-release.sh`: one-command tag + assets + GitHub release flow
 - `systemd/ec-fanmon.service.template`: deferred-load service template
 - `CONTRIBUTING.md`: contribution workflow and standards
 - `SECURITY.md`: vulnerability reporting and support policy
@@ -89,14 +91,14 @@ This removes:
 - `/usr/src/gigabyte-ec-fan-1.0`
 - softdep and legacy autoload files
 
-## Main Branch Protection (It is already configued on github)
+## Main Branch Protection
 For a publish-grade workflow, block direct pushes to `main` locally as well:
 
 ```bash
 ./scripts/setup-local-guards.sh
 ```
 
-Already configured server-side protection in GitHub as well.
+Server-side branch protection is documented in `docs/BRANCH_PROTECTION.md`.
 
 ## License
 GPL-2.0-only. See `LICENSE`.
