@@ -18,6 +18,9 @@ Boot safety is a hard requirement.
 3. Lint shell scripts:
    - `bash -n scripts/install.sh scripts/uninstall.sh scripts/verify.sh`
 4. Keep service load deferred via `systemd/ec-fanmon.service.template`.
+5. Do not push directly to `main`:
+   - install local guard: `./scripts/setup-local-guards.sh`
+   - use feature branches and pull requests
 
 ## Pull request checklist
 - Document behavior changes in `README.md` or `docs/DEPLOYMENT.md`.
