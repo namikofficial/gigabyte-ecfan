@@ -1,0 +1,15 @@
+[Unit]
+Description=Gigabyte EC Fan Monitor (Post-Boot Safe Load)
+After=multi-user.target nvidia-persistenced.service gpu-manager.service
+Wants=multi-user.target
+
+[Service]
+Type=simple
+ExecStartPre=/sbin/modprobe gigabyte_ec_fan
+ExecStart=@@FANMON_BIN@@ --raw -i 0.2
+Restart=on-failure
+RestartSec=3
+TimeoutStartSec=5
+
+[Install]
+WantedBy=multi-user.target
