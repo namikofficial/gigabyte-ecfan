@@ -27,6 +27,7 @@ This avoids early boot ACPI/EC interactions that can deadlock with GPU init on s
 - `systemd/ec-fanmon.service.template`: deferred-load service template
 - `CONTRIBUTING.md`: contribution workflow and standards
 - `docs/DEPLOYMENT.md`: deployment and kernel-update runbook
+- `docs/PUBLISHING.md`: GitHub publication steps
 
 ## Local build (non-DKMS)
 Requirements:
