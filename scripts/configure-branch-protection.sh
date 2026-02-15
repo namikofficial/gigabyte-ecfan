@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  ./scripts/configure-branch-protection.sh [--branch <name>] [--dry-run] [--no-signed-commits] [--no-restrict-to-owner] [<owner> <repo>]
+  ./scripts/configure-branch-protection.sh [--branch <name>] [--dry-run] [--no-signed-commits] [--no-restrict-to-owner] [--approvals <n>] [--require-codeowner-reviews] [<owner> <repo>]
 
 Examples:
   ./scripts/configure-branch-protection.sh
@@ -19,6 +19,8 @@ owner=""
 repo=""
 require_signed_commits=1
 restrict_to_owner=1
+approvals=0
+require_codeowner_reviews=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -36,6 +38,14 @@ while [ $# -gt 0 ]; do
       ;;
     --no-restrict-to-owner)
       restrict_to_owner=0
+      shift
+      ;;
+    --approvals)
+      approvals="${2:-}"
+      shift 2
+      ;;
+    --require-codeowner-reviews)
+      require_codeowner_reviews=1
       shift
       ;;
     -h|--help)
@@ -104,9 +114,19 @@ if [ -z "${owner}" ] || [ -z "${repo}" ]; then
   exit 2
 fi
 
-check_context="${CHECK_CONTEXT:-CI / build-and-lint}"
+check_context="${CHECK_CONTEXT:-build-and-lint}"
 endpoint="repos/${owner}/${repo}/branches/${branch}/protection"
 signatures_endpoint="${endpoint}/required_signatures"
+
+if ! [[ "${approvals}" =~ ^[0-9]+$ ]]; then
+  echo "--approvals must be a non-negative integer." >&2
+  exit 2
+fi
+
+codeowner_reviews_bool="false"
+if [ "${require_codeowner_reviews}" -eq 1 ]; then
+  codeowner_reviews_bool="true"
+fi
 
 restrictions_json="null"
 if [ "${restrict_to_owner}" -eq 1 ]; then
@@ -129,8 +149,8 @@ payload="$(cat <<EOF
   "enforce_admins": true,
   "required_pull_request_reviews": {
     "dismiss_stale_reviews": true,
-    "required_approving_review_count": 1,
-    "require_code_owner_reviews": true
+    "required_approving_review_count": ${approvals},
+    "require_code_owner_reviews": ${codeowner_reviews_bool}
   },
   "restrictions": ${restrictions_json},
   "required_linear_history": true,
@@ -150,8 +170,8 @@ payload_no_restrictions="$(cat <<EOF
   "enforce_admins": true,
   "required_pull_request_reviews": {
     "dismiss_stale_reviews": true,
-    "required_approving_review_count": 1,
-    "require_code_owner_reviews": true
+    "required_approving_review_count": ${approvals},
+    "require_code_owner_reviews": ${codeowner_reviews_bool}
   },
   "restrictions": null,
   "required_linear_history": true,
@@ -164,7 +184,8 @@ EOF
 
 echo "Target: ${owner}/${repo}"
 echo "Branch: ${branch}"
-echo "Codeowner reviews: enabled"
+echo "Codeowner reviews: ${codeowner_reviews_bool}"
+echo "Required approvals: ${approvals}"
 if [ "${require_signed_commits}" -eq 1 ]; then
   echo "Signed commits: enabled"
 else

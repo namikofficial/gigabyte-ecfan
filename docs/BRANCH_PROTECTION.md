@@ -2,11 +2,11 @@
 
 This repository should block direct updates to `main`.
 
-## Required settings for `main`
+## Baseline settings for `main` (solo-maintainer safe)
 - Pull request required before merge
-- Required status checks: `CI / build-and-lint` (strict)
-- At least 1 approval
-- Code owner review required
+- Required status checks: `build-and-lint` (strict)
+- 0 required approvals
+- Code owner review optional
 - Dismiss stale approvals
 - Require conversation resolution
 - Enforce for admins
@@ -34,4 +34,10 @@ Preview only:
 
 ```bash
 ./scripts/configure-branch-protection.sh --dry-run namikofficial gigabyte-ecfan
+```
+
+For stricter team mode (requires additional reviewers):
+
+```bash
+./scripts/configure-branch-protection.sh --approvals 1 --require-codeowner-reviews namikofficial gigabyte-ecfan
 ```
