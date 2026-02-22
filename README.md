@@ -42,6 +42,8 @@ This avoids early boot ACPI/EC interactions that can deadlock with GPU init on s
 - `docs/TROUBLESHOOTING.md`: failure signatures and rollback steps
 - `docs/PUBLISHING.md`: GitHub publication steps
 - `docs/RELEASE.md`: semantic release/tag/checksum process
+- `docs/wiki/`: source pages used to publish the GitHub wiki
+- `scripts/publish-wiki.sh`: sync `docs/wiki/*.md` to the GitHub wiki repository
 - `release-notes/`: versioned release notes for GitHub releases
 
 ## Local build (non-DKMS)
@@ -99,6 +101,15 @@ For a publish-grade workflow, block direct pushes to `main` locally as well:
 ```
 
 Server-side branch protection is documented in `docs/BRANCH_PROTECTION.md`.
+
+## Wiki
+Wiki source pages are maintained in `docs/wiki/`.
+
+Publish wiki content:
+```bash
+chmod +x ./scripts/publish-wiki.sh
+./scripts/publish-wiki.sh --repo namikofficial/gigabyte-ecfan
+```
 
 ## License
 GPL-2.0-only. See `LICENSE`.
