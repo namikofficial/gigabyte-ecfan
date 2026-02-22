@@ -88,7 +88,7 @@ if git diff --quiet && git diff --cached --quiet; then
   exit 0
 fi
 
-git add *.md
+git add -- ./*.md
 if git diff --cached --quiet; then
   echo "No wiki markdown changes detected."
   exit 0
