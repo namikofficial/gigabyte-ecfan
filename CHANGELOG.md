@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 1.0.3 - 2026-02-22
+
+- No user-facing changes.
+
+
 ## 1.0.2 - 2026-02-15
 
 - No user-facing changes.
